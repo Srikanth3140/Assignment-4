@@ -48,7 +48,7 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh 'kubectl apply -f k8s/'
+                sh 'kubectl apply -f kubernetes/'
             }
         }
 
