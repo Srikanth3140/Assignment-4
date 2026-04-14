@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Frontend</title>
+</head>
+<body>
+  <h1>Frontend 🚀</h1>
+  <button onclick="loadData()">Get Backend Data</button>
+  <p id="output"></p>
+
+  <script>
+    async function loadData() {
+      const res = await fetch("http://backend-service:8080");
+      const data = await res.json();
+      document.getElementById("output").innerText = data.message;
+    }
+  </script>
+</body>
+</html>
