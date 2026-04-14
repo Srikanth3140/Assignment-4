@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: srikanth3140/backend
+        image: srikanth3140/backend-app
         ports:
         - containerPort: 8080
         livenessProbe:
