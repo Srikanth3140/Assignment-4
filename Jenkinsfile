@@ -41,8 +41,8 @@ pipeline {
 
         stage('Push Images') {
             steps {
-                sh 'docker push $DOCKER_HUB:$TAG'
-                sh 'docker push $FRONTEND_IMAGE:$TAG'
+                sh 'docker push $DOCKER_HUB/frontend-app'
+                sh 'docker push $DOCKER_HUB/backend-app'
             }
         }
 
