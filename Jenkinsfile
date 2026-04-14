@@ -20,18 +20,11 @@ pipeline {
             }
         }
 
-        stage('Build Backend Image') {
-            steps {
-                dir('backend') {
-                    sh 'docker build -t $BACKEND_IMAGE:$TAG .'
-                }
-            }
-        }
 
-        stage('Build Frontend Image') {
+        stage('Build  Images') {
             steps {
                 dir('frontend') {
-                    sh 'docker build -t $DOCKER_HUB/frontend-app ./frontend.'
+                    sh 'docker build -t $DOCKER_HUB/frontend-app ./frontend'
                     sh 'docker build -t $DOCKER_HUB/backend-app ./backend'
                 }
             }
