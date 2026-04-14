@@ -1,8 +1,12 @@
-{
-  "name": "backend",
-  "version": "1.0.0",
-  "main": "app.js",
-  "dependencies": {
-    "express": "^4.18.2"
-  }
-}
+FROM node:18
+
+WORKDIR /app
+
+COPY package.json .
+RUN npm install
+
+COPY . .
+
+EXPOSE 8080
+
+CMD ["node", "app/app.js"]
