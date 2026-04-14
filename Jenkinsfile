@@ -1,12 +1,12 @@
 pipeline {
     agent { label 'docker' }
+
     options {
         skipDefaultCheckout(true)
     }
 
     environment {
-        DOCKER_HUB = "srikanth3140"  
-        EC2_IP = "54.91.14.137"
+        DOCKER_HUB = "srikanth3140"
         BACKEND_IMAGE = "${DOCKER_HUB}/backend"
         FRONTEND_IMAGE = "${DOCKER_HUB}/frontend"
         TAG = "latest"
@@ -14,18 +14,16 @@ pipeline {
 
     stages {
 
-
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
 
-
         stage('Build Backend Image') {
             steps {
-                
-                    sh 'docker build -t %BACKEND_IMAGE%:%TAG%'
+                dir('backend') {
+                    sh 'docker build -t $BACKEND_IMAGE:$TAG .'
                 }
             }
         }
@@ -33,7 +31,7 @@ pipeline {
         stage('Build Frontend Image') {
             steps {
                 dir('frontend') {
-                    bat 'docker build -t %FRONTEND_IMAGE%:%TAG% .'
+                    sh 'docker build -t $FRONTEND_IMAGE:$TAG .'
                 }
             }
         }
@@ -52,14 +50,14 @@ pipeline {
 
         stage('Push Images') {
             steps {
-                sh 'docker push $DOCKER_HUB/frontend-app'
-                sh 'docker push $DOCKER_HUB/backend-app'
+                sh 'docker push $BACKEND_IMAGE:$TAG'
+                sh 'docker push $FRONTEND_IMAGE:$TAG'
             }
         }
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh 'kubectl apply -f kubernetes/'
+                sh 'kubectl apply -f k8s/'
             }
         }
 
@@ -76,8 +74,8 @@ pipeline {
                 sh 'kubectl get pods'
             }
         }
-    
-}
+    }
+
     post {
         success {
             echo '✅ Deployment Successful!'
@@ -86,3 +84,4 @@ pipeline {
             echo '❌ Pipeline Failed!'
         }
     }
+}
