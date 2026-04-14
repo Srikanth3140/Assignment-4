@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "app/app.js",
+  "main": "app.js",
   "dependencies": {
     "express": "^4.18.2"
   }
