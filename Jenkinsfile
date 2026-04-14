@@ -27,7 +27,7 @@ pipeline {
                     sh 'docker build -t $DOCKER_HUB/backend-app ./backend'
                 }
             }
-        }
+        
 
         stage('Login to DockerHub') {
             steps {
