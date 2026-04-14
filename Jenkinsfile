@@ -7,9 +7,7 @@ pipeline {
 
     environment {
         DOCKER_HUB = "srikanth3140"
-        BACKEND_IMAGE = "${DOCKER_HUB}/backend"
-        FRONTEND_IMAGE = "${DOCKER_HUB}/frontend"
-        TAG = "latest"
+        EC2_IP = "54.91.14.137"
     }
 
     stages {
@@ -43,7 +41,7 @@ pipeline {
 
         stage('Push Images') {
             steps {
-                sh 'docker push $BACKEND_IMAGE:$TAG'
+                sh 'docker push $DOCKER_HUB:$TAG'
                 sh 'docker push $FRONTEND_IMAGE:$TAG'
             }
         }
