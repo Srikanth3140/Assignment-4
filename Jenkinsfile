@@ -76,7 +76,7 @@ pipeline {
                 sh 'kubectl get pods'
             }
         }
-    }
+    
 
     post {
         success {
