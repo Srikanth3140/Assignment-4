@@ -1,8 +1,12 @@
 pipeline {
-    agent any
+    agent { label 'docker' }
+    options {
+        skipDefaultCheckout(true)
+    }
 
     environment {
         DOCKER_HUB = "srikanth3140"  
+        EC2_IP = "54.91.14.137"
         BACKEND_IMAGE = "${DOCKER_HUB}/backend"
         FRONTEND_IMAGE = "${DOCKER_HUB}/frontend"
         TAG = "latest"
@@ -10,10 +14,18 @@ pipeline {
 
     stages {
 
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+
         stage('Build Backend Image') {
             steps {
-                dir('backend') {
-                    bat 'docker build -t %BACKEND_IMAGE%:%TAG% .'
+                
+                    sh 'docker build -t %BACKEND_IMAGE%:%TAG%'
                 }
             }
         }
@@ -33,35 +45,35 @@ pipeline {
                     usernameVariable: 'USERNAME',
                     passwordVariable: 'PASSWORD'
                 )]) {
-                    bat 'echo %PASSWORD% | docker login -u %USERNAME% --password-stdin'
+                    sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
                 }
             }
         }
 
         stage('Push Images') {
             steps {
-                bat 'docker push %BACKEND_IMAGE%:%TAG%'
-                bat 'docker push %FRONTEND_IMAGE%:%TAG%'
+                sh 'docker push $DOCKER_HUB/frontend-app'
+                sh 'docker push $DOCKER_HUB/backend-app'
             }
         }
 
         stage('Deploy to Kubernetes') {
             steps {
-                bat 'kubectl apply -f kubernetes/'
+                sh 'kubectl apply -f kubernetes/'
             }
         }
 
         stage('Verify Deployment') {
             steps {
-                bat 'kubectl get pods'
-                bat 'kubectl get svc'
+                sh 'kubectl get pods'
+                sh 'kubectl get svc'
             }
         }
 
         stage('Scaling (Auto Step)') {
             steps {
-                bat 'kubectl scale deployment backend --replicas=5'
-                bat 'kubectl get pods'
+                sh 'kubectl scale deployment backend --replicas=5'
+                sh 'kubectl get pods'
             }
         }
     }
