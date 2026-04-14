@@ -77,7 +77,7 @@ pipeline {
             }
         }
     
-
+}
     post {
         success {
             echo '✅ Deployment Successful!'
@@ -86,4 +86,3 @@ pipeline {
             echo '❌ Pipeline Failed!'
         }
     }
-}
